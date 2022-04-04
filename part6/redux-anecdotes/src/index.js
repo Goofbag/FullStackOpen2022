@@ -2,10 +2,10 @@ import ReactDOM from 'react-dom'
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import App from './App'
-import reducer from './reducers/anecdoteReducer'
+import anecdoteSlice from './reducers/anecdoteSlice'
 
-const store = createStore(reducer)
 
+export const store = createStore(anecdoteSlice)
 
 
 const render = () => {
@@ -18,4 +18,5 @@ const render = () => {
 }
 
 render()
-store.subscribe(render) 
+store.subscribe(render)
+store.subscribe(() => console.log(store.getState()))
