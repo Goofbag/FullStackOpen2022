@@ -1,29 +1,38 @@
-import { useSelector ,useDispatch } from 'react-redux'
-import {store} from '../index';
-import { increaseVote } from '../reducers/anecdoteSlice'
+import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { increaseVote } from '../reducers/anecdoteReducer'
+import { voteMessage, hideMessage } from '../reducers/notificationReducer'
+import Filter from './Filter'
 
-const ListAnecdotes = (props) => {
-  const anecdotes = useSelector(state => state)
-  console.log("anecdotes:", anecdotes)
+const AnecdoteList = () => {
+
+  const anecdotes = useSelector(state => state.anecdotes
+    .filter(anecdote => anecdote.content.toLowerCase().includes(state.filter.toLowerCase()))
+    .sort((a,b) => b.votes - a.votes))
+    
   const dispatch = useDispatch()
-  const vote = (id) => {
-    console.log('vote', id)
-    console.log("store.getState():", store.getState())
-    const state = store.getState();
-    dispatch(increaseVote(id))
-  }
 
-  const sortedAnecdotes = [...anecdotes].sort((a, b) => b.votes - a.votes);
+
+  const vote = (id) => {
+    const anecdote = anecdotes.find(anecdote => anecdote.id === id)
+    dispatch(increaseVote(id))
+    dispatch(voteMessage(anecdote.content))
+
+    setTimeout(() => {
+      dispatch(hideMessage())
+    }, 5000)
+  }
 
   return (
     <div>
-      {sortedAnecdotes.length > 0  && sortedAnecdotes.map(anecdote =>
-        <div key={anecdote?.id}>
+      <Filter />
+      {anecdotes.map(anecdote =>
+        <div key={anecdote.id}>
           <div>
-            {anecdote?.content ? anecdote.content : 'missing content...'}
+            {anecdote.content}
           </div>
           <div>
-            has {anecdote?.votes >= 0 ? anecdote.votes : 'no data...'}
+            has {anecdote.votes}
             <button onClick={() => vote(anecdote.id)}>vote</button>
           </div>
         </div>
@@ -33,4 +42,4 @@ const ListAnecdotes = (props) => {
 
 }
 
-export default ListAnecdotes
+export default AnecdoteList

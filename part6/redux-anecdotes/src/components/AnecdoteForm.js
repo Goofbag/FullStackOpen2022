@@ -1,16 +1,21 @@
 import { useDispatch } from 'react-redux'
-import { createAnecdote } from '../reducers/anecdoteSlice'
-import {store} from "../index";
+import { createAnecdote } from '../reducers/anecdoteReducer'
+import { saveMessage, hideMessage } from '../reducers/notificationReducer'
 
-const NewNote = (props) => {
+const AnecdoteForm = () => {
   const dispatch = useDispatch()
 
   const newAnecdote = (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
-      console.log("content:", content)
+    console.log("content:", content)
     dispatch(createAnecdote(content))
+    dispatch(saveMessage(content))
+
+    setTimeout(() => {
+      dispatch(hideMessage())
+    }, 5000)
   }
 
   return (
@@ -24,4 +29,4 @@ const NewNote = (props) => {
   )
 }
 
-export default NewNote
+export default AnecdoteForm

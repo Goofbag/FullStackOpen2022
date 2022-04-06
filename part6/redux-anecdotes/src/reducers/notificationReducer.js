@@ -1,13 +1,34 @@
-const notificationReducer = (state = 'ALL', action) => {
-    // ...
+const notificationState = ''
+
+const notificationReducer = (state= notificationState, action) => {
+
+  switch(action.type) {
+      case 'SAVE': return `${action.data} is saved.`
+
+      case 'VOTEFOR': return `You voted for "${action.data}`
+
+      case 'HIDE': return ''
+      
+      default: return state
   }
-  
-  export const notificationChange = notification => {
-    return {
-      type: 'SET_NOTIFICATION',
-      notification,
-    }
+}
+
+export const voteMessage = (text) => {
+  return {
+      type: 'VOTEFOR',
+      data: text
   }
-  
-  export default notificationReducer
-  
+}
+export const saveMessage = (text) => {
+  return {
+      type: 'SAVE',
+      data: text
+  }
+}
+export const hideMessage = () => {
+  return {
+      type: 'HIDE'
+  }
+}
+
+export default notificationReducer
